@@ -27,6 +27,19 @@ const AuthenticatedStack = () => {
   // Pega o estado do usuário do contexto
   const { userData } = useAuth();
 
+  // CORREÇÃO PARA TELA BRANCA: Se o usuário estiver autenticado, mas os dados 
+  // do usuário (userData) ainda não estiverem disponíveis, mostre o loading.
+  // Isso impede que o código tente acessar 'userData.preferencias' em um objeto nulo.
+  if (!userData) {
+      return (
+          <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color="#4CAF50" />
+              <Text style={styles.loadingText}>Carregando dados do usuário...</Text>
+          </View>
+      );
+  }
+
+  // O restante do código só é executado se userData for válido
   // CORRIGIDO: Usando 'times' e 'campeonatos' se essas forem as chaves corretas no objeto userData
   const hasPreferences = userData?.preferencias?.times?.length > 0 || userData?.preferencias?.campeonatos?.length > 0;
 
@@ -68,6 +81,7 @@ const AuthStack = () => (
     initialRouteName="Login"
     screenOptions={{ headerShown: false }}
   >
+    {/* O nome da rota é 'Login', e não 'LoginScreen' */}
     <Stack.Screen name="Login" component={LoginScreen} />
     <Stack.Screen name="Register" component={RegisterScreen} />
   </Stack.Navigator>

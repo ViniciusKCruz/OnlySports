@@ -1,16 +1,32 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator, Alert } from 'react-native';
-// Certifique-se de que o caminho abaixo está correto:
+import { 
+  View, 
+  Text, 
+  TextInput, 
+  TouchableOpacity, 
+  StyleSheet, 
+  ActivityIndicator, 
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 import { useAuth } from '../contexts/AuthContext';
-// A importação DEVE ser feita a partir de '../services/api'
 import { login } from '../services/api'; 
-// Observação: Não use loginUser, use apenas 'login'
+
+// Cores do tema (simulando um tema esportivo)
+const COLORS = {
+  primary: '#007AFF', // Azul vibrante
+  secondary: '#FF3B30', // Vermelho para destaque ou erro
+  background: '#F5F5F5', // Fundo claro
+  card: '#FFFFFF', // Cartões brancos
+  text: '#333333', // Texto escuro
+  placeholder: '#A0A0A0', // Placeholder cinza
+};
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  // Obtém a função de autenticação do contexto
   const { handleLogin } = useAuth(); 
 
   const handleLoginPress = async () => {
@@ -21,18 +37,10 @@ const LoginScreen = ({ navigation }) => {
 
     setLoading(true);
     try {
-      // 1. Chama a função de API 'login'
       const response = await login(email, password); 
-
-      // 2. Se a API for bem-sucedida, chama a função do AuthContext para processar a resposta e o login
-      // A função handleLogin (do AuthContext) se encarregará de salvar o token e o user data.
       await handleLogin(response.token, response.userData);
       
-      // O App.js deve automaticamente redirecionar para a Home ou PreferencesScreen
-      // após o estado do AuthContext ser atualizado.
-
     } catch (error) {
-      // Usa Alert.alert em vez de console.error para mostrar o erro ao usuário
       Alert.alert('Falha no Login', error.message || 'Ocorreu um erro desconhecido durante o login.');
     } finally {
       setLoading(false);
@@ -40,105 +48,118 @@ const LoginScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Acesse o OnlySports</Text>
+    <KeyboardAvoidingView 
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+      <View style={styles.content}>
+        <Text style={styles.title}>Acesse o OnlySports</Text>
+        <Text style={styles.subtitle}>Entre na sua conta para continuar</Text>
 
-      <TextInput
-        style={styles.input}
-        placeholder="E-mail"
-        placeholderTextColor="#999"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Senha"
-        placeholderTextColor="#999"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
+        <TextInput
+          style={styles.input}
+          placeholder="E-mail"
+          placeholderTextColor={COLORS.placeholder}
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Senha"
+          placeholderTextColor={COLORS.placeholder}
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+        />
 
-      <TouchableOpacity 
-        style={[styles.button, styles.primaryButton]} 
-        onPress={handleLoginPress}
-        disabled={loading}
-      >
-        {loading ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text style={styles.buttonText}>ENTRAR</Text>
-        )}
-      </TouchableOpacity>
+        <TouchableOpacity 
+          style={[styles.button, styles.primaryButton]} 
+          onPress={handleLoginPress}
+          disabled={loading}
+        >
+          {loading ? (
+            <ActivityIndicator color={COLORS.card} />
+          ) : (
+            <Text style={styles.buttonText}>ENTRAR</Text>
+          )}
+        </TouchableOpacity>
 
-      <TouchableOpacity 
-        style={[styles.button, styles.secondaryButton]} 
-        onPress={() => navigation.navigate('Register')}
-        disabled={loading}
-      >
-        <Text style={styles.secondaryButtonText}>CADASTRAR-SE</Text>
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity 
+          style={styles.registerLink} 
+          onPress={() => navigation.navigate('Register')}
+          disabled={loading}
+        >
+          <Text style={styles.registerLinkText}>Não tem uma conta? <Text style={{fontWeight: 'bold'}}>Cadastre-se</Text></Text>
+        </TouchableOpacity>
+      </View>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: COLORS.background,
+  },
+  content: {
+    flex: 1,
     justifyContent: 'center',
-    padding: 20,
-    backgroundColor: '#f5f5f5',
+    padding: 30,
   },
   title: {
-    fontSize: 24,
+    fontSize: 32,
     fontWeight: 'bold',
-    marginBottom: 40,
+    color: COLORS.text,
     textAlign: 'center',
-    color: '#333',
+    marginBottom: 5,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: COLORS.placeholder,
+    textAlign: 'center',
+    marginBottom: 40,
   },
   input: {
     height: 50,
-    borderColor: '#ddd',
-    borderWidth: 1,
-    borderRadius: 8,
+    backgroundColor: COLORS.card,
+    borderRadius: 10,
     paddingHorizontal: 15,
     marginBottom: 15,
-    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
     fontSize: 16,
-    color: '#333',
+    color: COLORS.text,
   },
   button: {
     height: 50,
-    borderRadius: 8,
+    borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-    elevation: 5,
+    shadowColor: COLORS.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 8,
   },
   primaryButton: {
-    backgroundColor: '#007AFF', // Azul primário
-  },
-  secondaryButton: {
-    backgroundColor: 'transparent',
-    borderWidth: 1,
-    borderColor: '#007AFF',
+    backgroundColor: COLORS.primary,
   },
   buttonText: {
-    color: '#fff',
+    color: COLORS.card,
     fontSize: 18,
     fontWeight: 'bold',
   },
-  secondaryButtonText: {
-    color: '#007AFF',
-    fontSize: 18,
-    fontWeight: 'bold',
+  registerLink: {
+    marginTop: 20,
+    alignSelf: 'center',
   },
+  registerLinkText: {
+    color: COLORS.text,
+    fontSize: 14,
+  }
 });
 
 export default LoginScreen;

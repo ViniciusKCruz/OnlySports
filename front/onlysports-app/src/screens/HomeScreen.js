@@ -28,25 +28,27 @@ const FeedItem = ({ post }) => (
 );
 
 // --- Componente: Header Personalizado ---
-const CustomHeader = ({ insets, navigation, userName }) => (
-    <View style={[styles.header, { paddingTop: insets.top }]}>
-        <Text style={styles.headerTitle}>OnlySports</Text>
-        <Text style={styles.headerUser}>Olá, {userName.split(' ')[0]}!</Text>
-        <TouchableOpacity 
-            style={styles.profileButton}
-            // ALTERAÇÃO CRÍTICA: Navega para a tela 'Settings'
-            onPress={() => navigation.navigate('Settings')} 
-        >
-            <Ionicons name="settings-outline" size={24} color="#0056b3" />
-        </TouchableOpacity>
-    </View>
-);
+const CustomHeader = ({ insets, userName }) => {
+    // Lógica Corrigida: Verifica se o nome existe e não é uma string vazia (após remover espaços).
+    // Se for válido, pega o primeiro nome; caso contrário, usa 'Usuário'.
+    const firstName = (userName && userName.trim() !== '') 
+        ? userName.trim().split(' ')[0] 
+        : 'Usuário';
+
+    return (
+        <View style={[styles.header, { paddingTop: insets.top }]}>
+            <Text style={styles.headerTitle}>OnlySports</Text>
+            
+            {/* Usa o primeiro nome ou o fallback */}
+            <Text style={styles.headerUserRight}>Olá, {firstName}!</Text>
+        </View>
+    );
+};
 
 
 const HomeScreen = ({ navigation }) => {
     const insets = useSafeAreaInsets();
-    // Utilizando `user` e `logout` do contexto
-    const { user, logout } = useAuth(); 
+    const { user } = useAuth(); 
     
     // Simulação de estado de feed
     const [feedData, setFeedData] = useState([]);
@@ -77,18 +79,6 @@ const HomeScreen = ({ navigation }) => {
         }, 1000);
     };
 
-    const handleLogout = () => {
-        Alert.alert(
-            "Sair",
-            "Tem certeza que deseja sair?",
-            [
-                { text: "Cancelar", style: "cancel" },
-                // Chama a função `logout` do contexto de autenticação
-                { text: "Sair", onPress: logout, style: "destructive" } 
-            ]
-        );
-    };
-
     if (isLoading && feedData.length === 0) {
         return (
             <SafeAreaView style={styles.loadingContainer}>
@@ -98,15 +88,14 @@ const HomeScreen = ({ navigation }) => {
         );
     }
     
-    // Garantindo que o nome de usuário seja exibido corretamente
-    const userName = user?.nome || 'Usuário';
+    // Obtém o nome completo do usuário ou uma string vazia como fallback inicial
+    const userName = user?.nome || '';
 
     return (
         <SafeAreaView style={styles.container}>
             {/* Header com padding superior dinâmico e nome do usuário */}
             <CustomHeader 
                 insets={insets} 
-                navigation={navigation} 
                 userName={userName} 
             />
             
@@ -132,7 +121,7 @@ const HomeScreen = ({ navigation }) => {
                 )}
             />
 
-            {/* Simulação de um Bottom Bar para navegação e Logout */}
+            {/* Simulação de um Bottom Bar para navegação */}
             <View style={[styles.bottomBar, { paddingBottom: insets.bottom }]}>
                 {/* Botão de Feed (Ativo) */}
                 <TouchableOpacity style={styles.bottomBarButton} onPress={() => navigation.navigate('Home')}>
@@ -140,22 +129,16 @@ const HomeScreen = ({ navigation }) => {
                     <Text style={styles.bottomBarText}>Feed</Text>
                 </TouchableOpacity>
                 
-                {/* Botão de Preferências (Inativo - Mantido como acesso secundário) */}
+                {/* Botão de Preferências */}
                 <TouchableOpacity style={styles.bottomBarButton} onPress={() => navigation.navigate('Preferences')}>
                     <Ionicons name="list" size={24} color="#666" />
                     <Text style={styles.bottomBarTextInactive}>Preferências</Text>
                 </TouchableOpacity>
                 
-                {/* NOVO Botão de Configurações - Adicionado para facilitar acesso à nova tela */}
+                {/* Botão de Configurações */}
                 <TouchableOpacity style={styles.bottomBarButton} onPress={() => navigation.navigate('Settings')}>
                     <Ionicons name="settings-outline" size={24} color="#666" />
                     <Text style={styles.bottomBarTextInactive}>Config</Text>
-                </TouchableOpacity>
-                
-                {/* Botão de Sair */}
-                <TouchableOpacity style={styles.bottomBarButton} onPress={handleLogout}>
-                    <Ionicons name="log-out-outline" size={24} color="#666" />
-                    <Text style={styles.bottomBarTextInactive}>Sair</Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>
@@ -171,7 +154,7 @@ const styles = StyleSheet.create({
     header: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'space-between', // Mantém o título à esquerda e o texto à direita
         paddingHorizontal: 20,
         paddingBottom: 10,
         backgroundColor: '#fff',
@@ -183,13 +166,16 @@ const styles = StyleSheet.create({
         fontWeight: '900',
         color: '#0056b3',
     },
-    headerUser: {
-        flex: 1,
-        textAlign: 'center',
-        fontSize: 16,
+    
+    // Estilo para o canto superior direito
+    headerUserRight: {
+        fontSize: 14,
         fontWeight: '600',
         color: '#333',
+        maxWidth: '50%', // Limita o tamanho para o texto do usuário
+        textAlign: 'right',
     },
+
     profileButton: {
         padding: 5,
     },

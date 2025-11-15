@@ -1,8 +1,26 @@
-// src/screens/RegisterScreen.js
-
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { 
+  View, 
+  Text, 
+  TextInput, 
+  TouchableOpacity, 
+  StyleSheet, 
+  Alert, 
+  ActivityIndicator,
+  KeyboardAvoidingView, // Adicionado para melhor UX em teclados
+  Platform, // Adicionado para KeyboardAvoidingView
+} from 'react-native';
 import { registerUser } from '../services/api';
+
+// Cores do tema (simulando um tema esportivo)
+const COLORS = {
+  primary: '#007AFF', // Azul vibrante
+  secondary: '#FF3B30', // Vermelho para destaque ou erro
+  background: '#F5F5F5', // Fundo claro
+  card: '#FFFFFF', // Cartões brancos
+  text: '#333333', // Texto escuro
+  placeholder: '#A0A0A0', // Placeholder cinza
+};
 
 const RegisterScreen = ({ navigation }) => {
   const [nome, setNome] = useState('');
@@ -10,9 +28,7 @@ const RegisterScreen = ({ navigation }) => {
   const [senha, setSenha] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Ação de clique do botão
   const handleRegister = async () => {
-    // 1. Validação básica de campos vazios (antes de enviar)
     if (!nome || !email || !senha) {
       Alert.alert('Erro', 'Todos os campos são obrigatórios.');
       return;
@@ -21,18 +37,14 @@ const RegisterScreen = ({ navigation }) => {
     setLoading(true);
 
     try {
-      // 2. Chama a API do Spring Boot
       const userData = await registerUser(nome, email, senha);
 
-      // 3. Sucesso (HTTP 201)
-      // Ajuste na mensagem de alerta para instruir o login
       Alert.alert('Sucesso!', `Usuário ${userData.email} cadastrado! Faça login para continuar.`);
       
-      // Ação Corrigida: Navegar para a tela de Login
+      // Navegar para a tela de Login
       navigation.navigate('Login'); 
       
     } catch (error) {
-      // 4. Erro (Mensagem retornada pela API ou erro de rede)
       Alert.alert('Erro no Cadastro', error.message || 'Falha na comunicação com o servidor.');
     } finally {
       setLoading(false);
@@ -40,63 +52,127 @@ const RegisterScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Crie sua conta OnlySports</Text>
+    <KeyboardAvoidingView 
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+      <View style={styles.content}>
+        <Text style={styles.title}>Crie sua conta</Text>
+        <Text style={styles.subtitle}>Junte-se à comunidade OnlySports!</Text>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Nome Completo"
-        value={nome}
-        onChangeText={setNome}
-      />
+        <TextInput
+          style={styles.input}
+          placeholder="Nome Completo"
+          placeholderTextColor={COLORS.placeholder}
+          value={nome}
+          onChangeText={setNome}
+        />
 
-      <TextInput
-        style={styles.input}
-        placeholder="E-mail"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
+        <TextInput
+          style={styles.input}
+          placeholder="E-mail"
+          placeholderTextColor={COLORS.placeholder}
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Senha"
-        value={senha}
-        onChangeText={setSenha}
-        secureTextEntry // Oculta a senha
-      />
+        <TextInput
+          style={styles.input}
+          placeholder="Senha"
+          placeholderTextColor={COLORS.placeholder}
+          value={senha}
+          onChangeText={setSenha}
+          secureTextEntry
+        />
 
-      <Button
-        title={loading ? "Cadastrando..." : "CADASTRAR"}
-        onPress={handleRegister}
-        disabled={loading}
-      />
-    </View>
+        <TouchableOpacity
+          style={[styles.button, styles.primaryButton]}
+          onPress={handleRegister}
+          disabled={loading}
+        >
+          {loading ? (
+            <ActivityIndicator color={COLORS.card} />
+          ) : (
+            <Text style={styles.buttonText}>CADASTRAR</Text>
+          )}
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.loginLink}
+          onPress={() => navigation.navigate('Login')}
+        >
+          <Text style={styles.loginLinkText}>Já tem uma conta? <Text style={{fontWeight: 'bold'}}>Faça Login</Text></Text>
+        </TouchableOpacity>
+      </View>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    backgroundColor: COLORS.background,
+  },
+  content: {
+    flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#fff',
+    padding: 30,
   },
   title: {
-    fontSize: 24,
+    fontSize: 32,
     fontWeight: 'bold',
-    marginBottom: 30,
+    color: COLORS.text,
     textAlign: 'center',
+    marginBottom: 5,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: COLORS.placeholder,
+    textAlign: 'center',
+    marginBottom: 40,
   },
   input: {
     height: 50,
-    borderColor: '#ccc',
-    borderWidth: 1,
+    backgroundColor: COLORS.card,
+    borderRadius: 10,
+    paddingHorizontal: 15,
     marginBottom: 15,
-    paddingHorizontal: 10,
-    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    fontSize: 16,
+    color: COLORS.text,
   },
+  button: {
+    height: 50,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+    // Sombra para um efeito 3D sutil
+    shadowColor: COLORS.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 8,
+  },
+  primaryButton: {
+    backgroundColor: COLORS.primary,
+  },
+  buttonText: {
+    color: COLORS.card,
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  loginLink: {
+    marginTop: 20,
+    alignSelf: 'center',
+  },
+  loginLinkText: {
+    color: COLORS.text,
+    fontSize: 14,
+  }
 });
 
 export default RegisterScreen;

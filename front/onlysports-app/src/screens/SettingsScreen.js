@@ -7,42 +7,48 @@ import {
     TouchableOpacity, 
     ScrollView,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../contexts/AuthContext';
+// Importação de ícones removida para evitar erro de dependência. Usaremos emojis/texto simples.
+
 
 // Componente reutilizável para itens da lista
 const SettingItem = ({ icon, label, onPress, isDestructive = false }) => (
     <TouchableOpacity style={styles.itemContainer} onPress={onPress}>
         <View style={styles.itemLeft}>
             {/* Cores hardcoded no componente para manter o estilo original, se necessário */}
-            <Ionicons name={icon} size={24} color={isDestructive ? '#dc3545' : '#0056b3'} />
+            <Text style={{fontSize: 24, color: isDestructive ? '#dc3545' : '#0056b3', marginRight: 15 }}>{icon}</Text>
             <Text style={[styles.itemLabel, isDestructive && styles.destructiveText]}>
                 {label}
             </Text>
         </View>
         {!isDestructive && (
-            <Ionicons name="chevron-forward" size={20} color="#ccc" />
+            <Text style={{ fontSize: 20, color: '#ccc' }}>{'>'}</Text>
         )}
     </TouchableOpacity>
 );
 
 
 const SettingsScreen = ({ navigation }) => {
-    // CORREÇÃO AQUI: Usando 'userData' e 'handleLogout'
-    // conforme definido no useAuth do seu AuthContext
     const { userData, handleLogout } = useAuth(); 
+
+    const nav = navigation;
 
     const handleActionLogout = () => {
         // Implementar confirmação de modal aqui (não usar alert())
-        // Por enquanto, chamamos diretamente a função que limpa o token/dados
         handleLogout();
-    };
+        
+        // A transição para a tela de Login será feita automaticamente pelo AppNavigator
+        // quando o AuthContext atualizar isAuthenticated para false.
+        // A chamada de navegação (reset) é desnecessária e causa o erro.
 
+    };
+    
+    // A correção do erro de substring e robustez do ID está mantida:
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-                    <Ionicons name="arrow-back" size={24} color="#333" />
+                <TouchableOpacity onPress={() => nav.goBack()} style={styles.backButton}>
+                    <Text style={{ fontSize: 24, color: '#333' }}>{'<'}</Text>
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>Configurações</Text>
                 <View style={{ width: 34 }} /> 
@@ -53,7 +59,12 @@ const SettingsScreen = ({ navigation }) => {
                 {/* Informações da Conta */}
                 <View style={styles.section}>
                     <Text style={styles.accountText}>
-                        Conta de: {userData?.id ? `ID do Usuário (${userData.id.substring(0, 8)}...)` : 'Usuário Não Identificado'}
+                        {/* CORREÇÃO ROBUSTA: Encadeamento opcional e verificação de tipo/tamanho */}
+                        Conta de: {
+                            (userData?.id && typeof userData.id === 'string' && userData.id.length > 8) 
+                                ? `ID do Usuário (${userData.id.substring(0, 8)}...)` 
+                                : (userData?.id && userData.id.length > 0 ? `ID: ${userData.id}` : 'Usuário Não Identificado')
+                        }
                     </Text>
                 </View>
 
@@ -61,9 +72,9 @@ const SettingsScreen = ({ navigation }) => {
                 <Text style={styles.sectionTitle}>Geral</Text>
                 <View style={styles.card}>
                     <SettingItem 
-                        icon="football-outline" 
+                        icon="⚽"
                         label="Gerenciar Preferências Esportivas"
-                        onPress={() => navigation.navigate('Preferences')} 
+                        onPress={() => nav.navigate('Preferences')} 
                     />
                 </View>
 
@@ -71,24 +82,24 @@ const SettingsScreen = ({ navigation }) => {
                 <Text style={styles.sectionTitle}>Conta</Text>
                 <View style={styles.card}>
                     <SettingItem 
-                        icon="person-circle-outline" 
+                        icon="👤"
                         label="Informações do Perfil"
-                        onPress={() => navigation.navigate('ProfileInfo')} 
+                        onPress={() => nav.navigate('ProfileInfo')} 
                     />
                     <View style={styles.separator} />
                     <SettingItem 
-                        icon="lock-closed-outline" 
+                        icon="🔒"
                         label="Segurança e Senha"
-                        onPress={() => navigation.navigate('Security')} 
+                        onPress={() => nav.navigate('Security')} 
                     />
                 </View>
 
                 {/* Seção Ação (Logout) */}
                 <View style={[styles.card, styles.logoutCard]}>
                     <SettingItem 
-                        icon="log-out-outline" 
+                        icon="🚪"
                         label="Sair da Conta"
-                        onPress={handleActionLogout} // Chamando a função corrigida
+                        onPress={handleActionLogout}
                         isDestructive={true}
                     />
                 </View>
@@ -135,6 +146,8 @@ const styles = StyleSheet.create({
     accountText: {
         fontSize: 14,
         color: '#666',
+        // Adiciona um padding vertical para espaçamento no card de informações
+        paddingVertical: 10, 
     },
     sectionTitle: {
         fontSize: 16,
@@ -165,7 +178,7 @@ const styles = StyleSheet.create({
     },
     itemLabel: {
         fontSize: 16,
-        marginLeft: 15,
+        marginLeft: 0,
         color: '#333',
     },
     destructiveText: {
