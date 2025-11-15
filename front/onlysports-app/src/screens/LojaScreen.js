@@ -77,8 +77,6 @@ const styles = StyleSheet.create({
     },
     scrollContent: {
         padding: 15,
-        // O padding inferior deve ser um valor que compense a altura da Tab Bar (aprox. 70-80)
-        // para que o último item da lista não fique escondido atrás dela.
         paddingBottom: 80,
     },
     sectionTitle: {
@@ -129,7 +127,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     buyButton: {
-        backgroundColor: '#FF3B30', // Cor secundária para o botão de compra
+        backgroundColor: '#FF3B30', 
         paddingVertical: 8,
         paddingHorizontal: 20,
         borderRadius: 8,

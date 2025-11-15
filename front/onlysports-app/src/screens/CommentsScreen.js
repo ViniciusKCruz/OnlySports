@@ -30,7 +30,7 @@ const CommentsScreen = ({ navigation }) => {
         const newId = `c${comments.length + 1}`;
         const comment = {
             id: newId,
-            user: 'Você (Usuário Logado)', // Simula o usuário logado
+            user: 'Você (Usuário Logado)',
             text: newComment.trim(),
             time: 'Agora',
         };
@@ -43,7 +43,7 @@ const CommentsScreen = ({ navigation }) => {
         <KeyboardAvoidingView 
             style={styles.container}
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0} // Ajuste para a altura da Tab Bar/Header
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0} 
         >
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>

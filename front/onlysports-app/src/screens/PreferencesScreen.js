@@ -263,7 +263,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         color: '#666',
     },
-    // --- Header ---
+
     header: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -284,13 +284,12 @@ const styles = StyleSheet.create({
     backButton: {
         padding: 10,
     },
-    placeholder: { // Para balancear o layout quando o botão Voltar não estiver presente
+    placeholder: { 
         width: 44, 
     },
-    // --- Scroll Content ---
     scrollContent: {
         paddingHorizontal: ITEM_MARGIN,
-        paddingBottom: 20, // Espaço extra para o ScrollView não ficar sob o footer
+        paddingBottom: 20, 
     },
     sectionTitle: {
         fontSize: 18,

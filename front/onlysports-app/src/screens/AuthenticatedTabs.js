@@ -9,10 +9,6 @@ import HomeScreen from './HomeScreen';
 import PreferencesScreen from './PreferencesScreen';
 import SettingsScreen from './SettingsScreen';
 import LojaScreen from './LojaScreen'; // Nova tela
-//import LojaStack from '../navigation/LojaStack'; // Stack para a Loja
-//import CommentsScreen from '../screens/CommentsScreen'; // Nova tela de comentários
-//import PremiumScreen from '../screens/PremiumScreen'; // Nova tela Premium
-//import StreamingScreen from '../screens/StreamingScreen'; // Nova tela Streaming
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -29,8 +25,7 @@ const AuthenticatedTabs = () => {
             initialRouteName="Feed"
             screenOptions={({ route }) => ({
                 headerShown: false,
-                tabBarActiveTintColor: '#0056b3', // Cor primária
-                tabBarInactiveTintColor: '#666',
+                tabBarActiveTintColor: '#0056b3',
                 tabBarStyle: {
                     backgroundColor: '#fff',
                     borderTopWidth: 1,

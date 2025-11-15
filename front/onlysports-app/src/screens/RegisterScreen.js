@@ -8,18 +8,18 @@ import {
   Alert, 
   ActivityIndicator,
   KeyboardAvoidingView, // Adicionado para melhor UX em teclados
-  Platform, // Adicionado para KeyboardAvoidingView
+  Platform, 
 } from 'react-native';
 import * as serviceApi from '../services/api';
 
-// Cores do tema (simulando um tema esportivo)
+// Cores do tema 
 const COLORS = {
-  primary: '#007AFF', // Azul vibrante
-  secondary: '#FF3B30', // Vermelho para destaque ou erro
-  background: '#F5F5F5', // Fundo claro
-  card: '#FFFFFF', // Cartões brancos
-  text: '#333333', // Texto escuro
-  placeholder: '#A0A0A0', // Placeholder cinza
+  primary: '#007AFF', 
+  secondary: '#FF3B30', 
+  background: '#F5F5F5', 
+  card: '#FFFFFF',
+  text: '#333333', 
+  placeholder: '#A0A0A0', 
 };
 
 const RegisterScreen = ({ navigation }) => {

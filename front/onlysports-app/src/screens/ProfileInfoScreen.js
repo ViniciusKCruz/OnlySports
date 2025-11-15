@@ -6,7 +6,6 @@ import { useAuth } from '../contexts/AuthContext';
 const ProfileInfoScreen = ({ navigation }) => {
     const { userData } = useAuth();
     
-    // Estados iniciais mockados (você irá preencher com dados reais do userData)
     const [name, setName] = useState(userData?.name || 'Nome do Usuário');
     const [email, setEmail] = useState(userData?.email || 'email@exemplo.com');
     const [isEditing, setIsEditing] = useState(false);
@@ -14,17 +13,14 @@ const ProfileInfoScreen = ({ navigation }) => {
 
     const handleSave = () => {
         setIsLoading(true);
-        // Lógica de salvamento aqui (ex: chamada de API)
         setTimeout(() => {
             setIsLoading(false);
             setIsEditing(false);
-            // Mensagem de sucesso/erro
         }, 1500);
     };
 
     return (
         <SafeAreaView style={styles.container}>
-            {/* Header */}
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
                     <Ionicons name="arrow-back" size={24} color="#333" />
@@ -41,10 +37,8 @@ const ProfileInfoScreen = ({ navigation }) => {
                 </TouchableOpacity>
             </View>
 
-            {/* Formulário de Informações */}
             <View style={styles.form}>
                 
-                {/* Campo Nome */}
                 <Text style={styles.label}>Nome</Text>
                 <TextInput
                     style={styles.input}
@@ -54,7 +48,6 @@ const ProfileInfoScreen = ({ navigation }) => {
                     placeholder="Seu nome completo"
                 />
 
-                {/* Campo Email (Geralmente não editável) */}
                 <Text style={styles.label}>Email (Não Editável)</Text>
                 <TextInput
                     style={[styles.input, styles.disabledInput]}
@@ -63,7 +56,6 @@ const ProfileInfoScreen = ({ navigation }) => {
                     placeholder="Seu email"
                 />
 
-                {/* Você pode adicionar mais campos aqui, como time preferido, etc. */}
 
                 {isLoading && (
                     <View style={styles.loadingOverlay}>

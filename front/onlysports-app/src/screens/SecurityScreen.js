@@ -29,7 +29,6 @@ const MessageBanner = ({ message, type, onDismiss }) => {
     );
 };
 
-// Componente de UI para o campo de formulário
 const FormField = ({ label, value, onChangeText, secureTextEntry = false, keyboardType = 'default' }) => (
     <View style={styles.formGroup}>
         <Text style={styles.label}>{label}</Text>
@@ -48,23 +47,19 @@ const SecurityScreen = ({ navigation }) => {
     const insets = useSafeAreaInsets();
     const { updatePassword } = useAuth(); // Assume uma função de contexto para alterar senha
     
-    // Estados para o formulário de senha
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmNewPassword, setConfirmNewPassword] = useState('');
     const [isLoadingPassword, setIsLoadingPassword] = useState(false);
 
-    // Estado para o Banner de Mensagem
     const [banner, setBanner] = useState({ message: '', type: '' });
 
-    // Função de tratamento de navegação segura
     const handleGoBack = () => {
         if (navigation.canGoBack()) {
             navigation.goBack();
         } 
     };
 
-    // Função para mostrar o banner de mensagem
     const showBanner = (message, type = 'error') => {
         setBanner({ message, type });
         setTimeout(() => setBanner({ message: '', type: '' }), 4000); 
@@ -96,15 +91,12 @@ const SecurityScreen = ({ navigation }) => {
         setIsLoadingPassword(true);
 
         try {
-            // Simulação de chamada de API para alterar a senha
-            // Em uma aplicação real, você chamaria: await updatePassword(currentPassword, newPassword);
             await new Promise(resolve => setTimeout(resolve, 1500));
             
             const success = true; // Simulação de sucesso
 
             if (success) {
                 showBanner("Senha alterada com sucesso!", 'success');
-                // Limpa os campos após o sucesso
                 setCurrentPassword('');
                 setNewPassword('');
                 setConfirmNewPassword('');
@@ -127,7 +119,6 @@ const SecurityScreen = ({ navigation }) => {
                 onDismiss={() => setBanner({ message: '', type: '' })}
             />
 
-            {/* Header */}
             <View style={styles.header}>
                 <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
                     <Ionicons name="arrow-back" size={24} color="#333" />
@@ -174,7 +165,6 @@ const SecurityScreen = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
 
-                {/* Cartão de Outras Configurações de Segurança */}
                 <View style={styles.card}>
                     <Text style={styles.cardTitle}>Outras Configurações</Text>
                     <TouchableOpacity style={styles.securityOption} onPress={() => showBanner("Simulando navegação para 2FA...", 'success')}>

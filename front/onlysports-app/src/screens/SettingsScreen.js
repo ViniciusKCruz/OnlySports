@@ -7,14 +7,12 @@ import {
     ScrollView,
 } from 'react-native';
 import { useAuth } from '../contexts/AuthContext';
-// Importação de ícones removida para evitar erro de dependência. Usaremos emojis/texto simples.
 
 
 // Componente reutilizável para itens da lista
 const SettingItem = ({ icon, label, onPress, isDestructive = false }) => (
     <TouchableOpacity style={styles.itemContainer} onPress={onPress}>
         <View style={styles.itemLeft}>
-            {/* Cores hardcoded no componente para manter o estilo original, se necessário */}
             <Text style={{fontSize: 24, color: isDestructive ? '#dc3545' : '#0056b3', marginRight: 15 }}>{icon}</Text>
             <Text style={[styles.itemLabel, isDestructive && styles.destructiveText]}>
                 {label}
@@ -33,13 +31,7 @@ const SettingsScreen = ({ navigation }) => {
     const nav = navigation;
 
     const handleActionLogout = () => {
-        // Implementar confirmação de modal aqui (não usar alert())
         handleLogout();
-        
-        // A transição para a tela de Login será feita automaticamente pelo AppNavigator
-        // quando o AuthContext atualizar isAuthenticated para false.
-        // A chamada de navegação (reset) é desnecessária e causa o erro.
-
     };
     
     // A correção do erro de substring e robustez do ID está mantida:
