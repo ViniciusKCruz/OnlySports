@@ -1,4 +1,3 @@
-// AuthController.java
 package com.example.onlysports.controller;
 
 import com.example.onlysports.dto.RegistroRequest;
@@ -23,11 +22,13 @@ public class AuthController {
         try {
             Usuario usuarioSalvo = authService.cadastrarUsuario(request);
 
-            // Mapeia a entidade para o DTO de resposta
+            // CRÍTICO: Mapeia a entidade para o DTO de resposta,
+            // incluindo o Set<String> preferencias (5 argumentos)
             UsuarioResponse response = new UsuarioResponse(
                     usuarioSalvo.getIdUsuario(),
                     usuarioSalvo.getNome(),
                     usuarioSalvo.getEmail(),
+                    usuarioSalvo.getPreferencias(), // <--- CAMPO ADICIONADO AQUI
                     usuarioSalvo.getTipoConta()
             );
 

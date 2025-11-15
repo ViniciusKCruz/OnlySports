@@ -11,7 +11,7 @@ import {
   Platform,
 } from 'react-native';
 import { useAuth } from '../contexts/AuthContext';
-import { login } from '../services/api'; 
+import * as serviceApi from '../services/api'; 
 
 // Cores do tema (simulando um tema esportivo)
 const COLORS = {
@@ -37,7 +37,7 @@ const LoginScreen = ({ navigation }) => {
 
     setLoading(true);
     try {
-      const response = await login(email, password); 
+      const response = await serviceApi.login(email, password); 
       await handleLogin(response.token, response.userData);
       
     } catch (error) {

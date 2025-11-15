@@ -10,13 +10,15 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/usuarios")
+// CRÍTICO: Alterado de "/api/usuarios" para "/api/users" para corrigir o erro 404
+// e alinhar com o Frontend (/api/users/me).
+@RequestMapping("/api/users")
 public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
 
-    // GET /api/usuarios/me (Busca dados do usuário logado)
+    // GET /api/users/me (Busca dados do usuário logado)
     @GetMapping("/me")
     public ResponseEntity<UsuarioResponse> getUsuarioLogado(@AuthenticationPrincipal Usuario usuarioLogado) {
         // O Spring Security injeta automaticamente o objeto Usuario logado
@@ -24,13 +26,14 @@ public class UsuarioController {
                 usuarioLogado.getIdUsuario(),
                 usuarioLogado.getNome(),
                 usuarioLogado.getEmail(),
+                usuarioLogado.getPreferencias(), // Adicionando as preferências
                 usuarioLogado.getTipoConta()
         );
         return ResponseEntity.ok(response);
     }
 
-    // PUT /api/usuarios/preferencias (Atualiza as preferências do usuário logado)
-    @PutMapping("/preferencias")
+    // PUT /api/users/preferences (Atualiza as preferências do usuário logado)
+    @PutMapping("/preferences")
     public ResponseEntity<UsuarioResponse> atualizarPreferencias(
             @AuthenticationPrincipal Usuario usuarioLogado,
             @RequestBody PreferenciasRequest request) {
@@ -46,10 +49,10 @@ public class UsuarioController {
                 usuarioAtualizado.getIdUsuario(),
                 usuarioAtualizado.getNome(),
                 usuarioAtualizado.getEmail(),
+                usuarioAtualizado.getPreferencias(), // Retornando as preferências atualizadas
                 usuarioAtualizado.getTipoConta()
         );
 
-        // O cliente (React Native) agora tem a lista de preferências atualizada.
         return ResponseEntity.ok(response);
     }
 }

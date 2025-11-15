@@ -3,7 +3,6 @@ import {
     View, 
     Text, 
     StyleSheet, 
-    SafeAreaView, 
     TouchableOpacity, 
     ScrollView,
 } from 'react-native';
@@ -45,7 +44,7 @@ const SettingsScreen = ({ navigation }) => {
     
     // A correção do erro de substring e robustez do ID está mantida:
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => nav.goBack()} style={styles.backButton}>
                     <Text style={{ fontSize: 24, color: '#333' }}>{'<'}</Text>
@@ -68,15 +67,25 @@ const SettingsScreen = ({ navigation }) => {
                     </Text>
                 </View>
 
-                {/* Seção Geral */}
-                <Text style={styles.sectionTitle}>Geral</Text>
-                <View style={styles.card}>
-                    <SettingItem 
-                        icon="⚽"
-                        label="Gerenciar Preferências Esportivas"
-                        onPress={() => nav.navigate('Preferences')} 
-                    />
-                </View>
+	                {/* Seção Geral */}
+	                <Text style={styles.sectionTitle}>Geral</Text>
+	                <View style={styles.card}>
+	                    <SettingItem 
+	                        icon="⚽"
+	                        label="Gerenciar Preferências Esportivas"
+	                        onPress={() => nav.navigate('Preferences')} 
+	                    />
+	                </View>
+	
+	                {/* Seção Premium */}
+	                <Text style={styles.sectionTitle}>Premium</Text>
+	                <View style={styles.card}>
+	                    <SettingItem 
+	                        icon="⭐"
+	                        label="Tornar-se Membro Premium"
+	                        onPress={() => nav.navigate('Premium')} 
+	                    />
+	                </View>
 
                 {/* Seção Conta */}
                 <Text style={styles.sectionTitle}>Conta</Text>
@@ -107,8 +116,8 @@ const SettingsScreen = ({ navigation }) => {
                 <Text style={styles.versionText}>App Versão 1.0.0</Text>
 
             </ScrollView>
-        </SafeAreaView>
-    );
+	</View>
+	);
 };
 
 const styles = StyleSheet.create({

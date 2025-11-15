@@ -10,7 +10,7 @@ import {
   KeyboardAvoidingView, // Adicionado para melhor UX em teclados
   Platform, // Adicionado para KeyboardAvoidingView
 } from 'react-native';
-import { registerUser } from '../services/api';
+import * as serviceApi from '../services/api';
 
 // Cores do tema (simulando um tema esportivo)
 const COLORS = {
@@ -37,7 +37,7 @@ const RegisterScreen = ({ navigation }) => {
     setLoading(true);
 
     try {
-      const userData = await registerUser(nome, email, senha);
+      const userData = await serviceApi.register(nome, email, senha);
 
       Alert.alert('Sucesso!', `Usuário ${userData.email} cadastrado! Faça login para continuar.`);
       
