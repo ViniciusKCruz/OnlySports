@@ -3,7 +3,7 @@
 // URL base da sua API Backend. 
 // Certifique-se de que esta é a URL correta onde seu servidor Backend está rodando.
 // Exemplo: 'http://10.0.2.2:8080' para rodar no emulador Android
-const API_BASE_URL = 'http://192.168.0.100:8080'; // SUBSTITUA pelo seu IP local ou URL do servidor!
+const API_BASE_URL = 'http://192.168.100.7:8080'; // SUBSTITUA pelo seu IP local ou URL do servidor!
 
 // Função auxiliar para requisições
 const request = async (endpoint, options = {}) => {
@@ -25,27 +25,23 @@ const request = async (endpoint, options = {}) => {
         method: options.method || 'GET',
         headers,
         body: options.body ? JSON.stringify(options.body) : null,
-        // Omitindo outras opções para manter o código mais limpo
     };
 
     try {
         const response = await fetch(url, config);
-        
         if (response.status === 204) {
-            return true; // Sucesso sem conteúdo (Ex: PUT/DELETE)
+            return true; 
         }
 
         const data = await response.json();
 
         if (!response.ok) {
-            // Lança um erro com a mensagem do backend
             throw new Error(data.message || `Erro de API: ${response.status}`);
         }
 
         return data;
     } catch (error) {
         console.error(`Falha na requisição para ${endpoint}:`, error);
-        // Garante que o erro seja relançado para ser capturado no LoginScreen ou PreferencesScreen
         throw error; 
     }
 };
@@ -86,9 +82,7 @@ export const login = async (email, password) => {
  */
 export const register = async (name, email, password) => {
     try {
-        // Exemplo: return await request('/auth/register', { method: 'POST', body: { name, email, password } });
         
-        // SIMULAÇÃO: Sucesso no Registro
         await new Promise(resolve => setTimeout(resolve, 1500)); 
         return {
             token: 'mock-auth-token-456',
@@ -96,7 +90,7 @@ export const register = async (name, email, password) => {
                 id: 2,
                 name: name,
                 email: email,
-                preferencias: null // Novo usuário não tem preferências
+                preferencias: null 
             }
         };
     } catch (error) {
@@ -117,7 +111,6 @@ export const fetchPreferencesData = async () => {
     // Simulação de delay de rede
     await new Promise(resolve => setTimeout(resolve, 1500)); 
 
-    // Dados Mockados para teste:
     return {
         teams: [
             { id: 1, name: 'Flamengo' },
@@ -144,8 +137,6 @@ export const fetchPreferencesData = async () => {
  */
 export const savePreferences = async (preferencesPayload) => {
     try {
-        // Exemplo: await request('/preferences/save', { method: 'POST', body: preferencesPayload }); return true;
-        
         console.log("SIMULANDO: Salvamento de Preferências:", preferencesPayload);
         await new Promise(resolve => setTimeout(resolve, 1000));
         
@@ -156,10 +147,7 @@ export const savePreferences = async (preferencesPayload) => {
     }
 };
 
-// --- OUTRAS FUNÇÕES ---
 
-// Função Placeholder para o Home
 export const fetchNewsFeed = async () => {
-    // return request('/feed/news');
     return []; 
 };
